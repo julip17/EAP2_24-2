@@ -1,0 +1,73 @@
+---
+title: "Untitled"
+author: "Ponce"
+date: "2024-10-05"
+output: html_document
+---
+```{r}
+library(rio)
+setwd("C:/Users/julip/Downloads")
+data=import("EG2021_2V_Resultados_Presidencial2.xlsx")
+```
+
+#seleccionar columnas
+```{r}
+# Seleccionar columnas por índice
+data <- data[, c(1, 2, 3, 12, 14, 15)]  # Selecciona la primera y la tercera columna
+data <- data[, c(2, 3, 5, 6)]
+```
+
+```{r}
+DataFinalTrabajo=import("DataFinalTrabajo.csv")
+```
+
+#eliminar
+```{r}
+DataFinalTrabajo <- DataFinalTrabajo[, -c(4, 5, 6)]
+
+```
+
+#filtrar por partido politico
+```{r}
+# Si no tienes dplyr instalado, primero instala tidyverse
+# install.packages("tidyverse")
+
+# Cargar dplyr
+library(dplyr)
+
+# Suponiendo que tu data se llama 'datos'
+data <- data %>%
+  filter(`Organización Política` == "PARTIDO POLITICO NACIONAL PERU LIBRE")
+
+# Visualizar la nueva data filtrada
+print(nueva_data)
+
+```
+
+#Juntar datas
+```{r}
+# Suponiendo que tus dataframes se llaman 'data1' y 'data2'
+# Hacemos el merge por la columna 'Provincia'
+DataFinal <- right_join(data, DataFinalTrabajo, by = "Provincia")
+```
+
+#Cambiar de lugar
+```{r}
+# Cargar dplyr
+library(dplyr)
+
+# Reordenar las columnas, asumiendo que el dataframe se llama 'data'
+DataFinal <- DataFinal %>%
+  select(Ubigeo, Provincia, Region, `Organización Política`, Electores, Votos, `% Votos`, total_electores_mujeres, porcentaje_mujeres, total_electores_jovenes, porcentaje_jovenes, IDH, `% Pobreza Extrema`, PE_Hab)
+
+```
+
+#Guardar data
+```{r}
+library(writexl)
+
+# Guardar el dataframe como archivo CSV
+write.csv(DataFinal, "DataFinalTrabajo_.csv", row.names = FALSE)
+
+```
+
